@@ -99,8 +99,15 @@ function! go#util#System(str, ...)
     let &shell = '/bin/sh'
   endif
 
+  " NOTE: Fix path separator, use '/' on Windows
+  let l:str = a:str
+  if go#util#IsWin()
+    let l:str = substitute(a:str, '\\', '/', 'g')
+  endif
+
   try
-    let l:output = call(s:vim_system, [a:str] + a:000)
+    "let l:output = call(s:vim_system, [a:str] + a:000)
+    let l:output = call(s:vim_system, [l:str] + a:000)
     return l:output
   finally
     let &shell = l:shell
